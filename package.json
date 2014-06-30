@@ -1,0 +1,14 @@
+{
+  "name": "quippet",
+  "main": "./lib/quippet",
+  "version": "0.0.0",
+  "description": "Easily create new snippets",
+  "activationEvents": ["quippet:toggle"],
+  "repository": "https://github.com/atom/quippet",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}

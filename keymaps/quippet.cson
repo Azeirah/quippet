@@ -1,0 +1,6 @@
+'.workspace':
+  'alt-shift-tab': 'quippet:toggle'
+
+# Destroy the quippet view when escape gets pressed
+'.quippet':
+  'escape': 'quippet:deactivate'
