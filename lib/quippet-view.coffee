@@ -11,7 +11,7 @@ class QuippetView extends View
       @subview "tabName", new EditorView(mini:true, placeholderText: 'Snippet tab activation')
       @subview "snippetName", new EditorView(mini:true, placeholderText: 'Snippet name')
       @subview "activationSource", new EditorView(mini:true, placeholderText: 'Snippet selector (ex: `.source.js`)')
-      @button "Done", class: "createSnippetButton"
+      @button "Done", class: "createSnippetButton btn"
 
   initialize: (serializeState) ->
     @handleEvents()
@@ -33,6 +33,13 @@ class QuippetView extends View
 
   populateSnippetField: (text) ->
     @snippet.text text
+
+  populateSourceField: ->
+    editor = atom.workspace.activePaneItem
+    if editor
+      filename = editor.getTitle()
+      if filename.contains '.'
+        @activationSource.setText '.source.' + filename.split('.').pop()
 
   createSnippet: ->
     tabname = @tabName.getText()
@@ -97,13 +104,18 @@ class QuippetView extends View
     validate tabname, @tabName
     return tabname > 0 and snippetName > 0 and snippet > 0 and source > 0
 
-  toggle: ->
+  showPane: ->
+    atom.workspaceView.append(this)
     editor = atom.workspace.activePaneItem
-    if @hasParent()
-      @detach()
-    else
-      atom.workspaceView.append(this)
+    if editor
       selection = editor.getSelection().getText()
       if selection.length > 0
         @populateSnippetField(selection)
+        @populateSourceField()
         @snippet.focus()
+
+  toggle: ->
+    if @hasParent()
+      @detach()
+    else
+      @showPane()
