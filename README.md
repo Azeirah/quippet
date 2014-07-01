@@ -5,7 +5,7 @@ Quippet allows for creating snippets quickly with a simple interface.
 ![example image](https://raw.githubusercontent.com/Azeirah/quippet/master/quippet.png)
 ### How do I use it?
 
-Just press `alt-shift-tab` to bring up the dialog.
+Just press `alt-shift-q` to bring up the dialog.
 Write down the snippets' content, its name, where it gets activated and the tab activation.
 
 Quippet will automatically use any text you have selected when you open it up.
