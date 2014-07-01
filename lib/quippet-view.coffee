@@ -21,6 +21,10 @@ class QuippetView extends View
   serialize: ->
 
   handleEvents: ->
+    @on 'keydown', (event) =>
+      escapeKeyCode = 27
+      if event.which == escapeKeyCode
+        @detach()
     @find('.createSnippetButton').on 'click', => @createSnippet()
 
   # Tear down any state and detach
@@ -36,7 +40,7 @@ class QuippetView extends View
     source = @activationSource.getText()
     snippet = @snippet.val()
     if @validateSnippet()
-      console.log "snippet is valid"
+      console.log "New snippet is valid"
       filepath = __dirname + '/../snippets/' + snippetName + '.json'
       snippetJSON = {}
 
@@ -82,22 +86,15 @@ class QuippetView extends View
     snippetName = @snippetName.getText().length
     source = @activationSource.getText().length
     snippet = @snippet.val().length
-    if tabname is 0
-      @tabName.css border: "1px solid red"
-    else
-      @tabName.css border: "inherit"
-    if snippetName is 0
-      @snippetName.css border: "1px solid red"
-    else
-      @snippetName.css border: "inherit"
-    if snippet is 0
-      @snippet.css border: "1px solid red"
-    else
-      @snippet.css border: "inherit"
-    if source is 0
-      @activationSource.css border: "1px solid red"
-    else
-      @activationSource.css border: "inherit"
+    validate = (input, el) ->
+      if input is 0
+        el.css border: "1px solid red"
+      else
+        el.css border: ""
+    validate snippet, @snippet
+    validate snippetName, @snippetName
+    validate source, @activationSource
+    validate tabname, @tabName
     return tabname > 0 and snippetName > 0 and snippet > 0 and source > 0
 
   toggle: ->
@@ -107,7 +104,6 @@ class QuippetView extends View
     else
       atom.workspaceView.append(this)
       selection = editor.getSelection().getText()
-      console.log(selection)
       if selection.length > 0
         @populateSnippetField(selection)
         @snippet.focus()
