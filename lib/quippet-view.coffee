@@ -6,7 +6,8 @@ module.exports =
 class QuippetView extends View
   @content: ->
     @div class: 'quippet overlay from-top', =>
-      @h1 "Create a quick snippet here!", class: "message"
+      @div class: "panel", =>
+        @h1 "Create a quick snippet here!", class: "panel-heading"
       @textarea "snippetField", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet"
       @subview "tabName", new EditorView(mini:true, placeholderText: 'Snippet tab activation')
       @subview "snippetName", new EditorView(mini:true, placeholderText: 'Snippet name')
@@ -16,16 +17,27 @@ class QuippetView extends View
   initialize: (serializeState) ->
     @handleEvents()
     atom.workspaceView.command "quippet:toggle", => @toggle()
+    @maxSnippetHeight()
+
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
 
   handleEvents: ->
+    enterKeyCode = 13
+    escapeKeyCode = 27
+    window.addEventListener 'resize', =>
+      @maxSnippetHeight()
     @on 'keydown', (event) =>
-      escapeKeyCode = 27
       if event.which == escapeKeyCode
         @detach()
     @find('.createSnippetButton').on 'click', => @createSnippet()
+    fields = [@tabName, @snippetName, @activationSource, @snippet]
+    for field in fields
+      field.on 'core:confirm', (event) =>
+        @createSnippet()
+      field.on 'keyup', =>
+        @validateSnippet()
 
   # Tear down any state and detach
   destroy: ->
@@ -35,7 +47,7 @@ class QuippetView extends View
     @snippet.text text
 
   populateSourceField: ->
-    editor = atom.workspace.activePaneItem
+    editor = atom.workspace.getActiveEditor()
     if editor
       filename = editor.getTitle()
       if filename.contains '.'
@@ -95,9 +107,11 @@ class QuippetView extends View
     snippet = @snippet.val().length
     validate = (input, el) ->
       if input is 0
-        el.css border: "1px solid red"
+        el.addClass "invalid"
+        el.removeClass "valid"
       else
-        el.css border: ""
+        el.removeClass "invalid"
+        el.addClass "valid"
     validate snippet, @snippet
     validate snippetName, @snippetName
     validate source, @activationSource
@@ -106,13 +120,16 @@ class QuippetView extends View
 
   showPane: ->
     atom.workspaceView.append(this)
-    editor = atom.workspace.activePaneItem
+    editor = atom.workspace.getActiveEditor()
     if editor
       selection = editor.getSelection().getText()
+      @populateSourceField()
       if selection.length > 0
         @populateSnippetField(selection)
-        @populateSourceField()
         @snippet.focus()
+
+  maxSnippetHeight: ->
+    @snippet.css "max-height", (window.innerHeight * 0.8) + "px"
 
   toggle: ->
     if @hasParent()

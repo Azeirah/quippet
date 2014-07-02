@@ -1,3 +1,5 @@
+@import "ui-variables";
+
 .quippet {
     .snippet {
         border: none;
@@ -5,9 +7,23 @@
         width: 100%;
         min-width: 100%;
         max-width: 100%;
+        margin-bottom: @component-padding;
+        // this makes sure the textarea doesn't resize when the .invalid or .valid border is added
+        border: 1px solid rgba(0, 0, 0, 0);
     }
 
-    .message {
-      color: white;
+    .editor.mini,
+    .snippet {
+      transition: border .3s;
+    }
+
+    .editor.mini.invalid,
+    .snippet.invalid {
+      border: 1px solid fade(@background-color-warning, 40%);
+    }
+
+    .editor.mini.valid,
+    .snippet.valid {
+      border: 1px solid fade(@background-color-success, 40%);
     }
 }
