@@ -2,7 +2,7 @@
 
 Quippet allows for creating snippets quickly with a simple interface.
 
-![example image](https://raw.githubusercontent.com/Azeirah/quippet/master/quippet.png)
+![example image](https://raw.githubusercontent.com/Azeirah/quippet/master/quippet.gif)
 ### How do I use it?
 
 Just press `alt-shift-q` to bring up the dialog.
