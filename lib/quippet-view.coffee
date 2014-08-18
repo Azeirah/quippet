@@ -1,17 +1,23 @@
 {EditorView, Editor, View} = require 'atom'
 fs = require 'fs'
 snippets = require atom.packages.resolvePackagePath('snippets')
+SourceHelpView = require './sourceHelp-view'
 
 module.exports =
 class QuippetView extends View
+  @sourceHelpView = null
+
   @content: ->
     @div class: 'quippet overlay from-top', =>
       @div class: "panel", =>
         @h1 "Create a quick snippet here!", class: "panel-heading"
-      @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "Type the snippet body here"
+      @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "Snippet body goes here"
       @subview "tabName", new EditorView(mini:true, placeholderText: 'Snippet tab activation')
       @subview "snippetName", new EditorView(mini:true, placeholderText: 'Snippet name')
-      @subview "activationSource", new EditorView(mini:true, placeholderText: 'Snippet selector (ex: `.source.js`)')
+      @div "", class: "input-group snippetScopeGroup", =>
+        @subview "activationSource", new EditorView(mini:true, placeholderText: 'Snippet scope selector (ex: `.source.js`)')
+        @span "", class: "input-group-btn", =>
+          @button "?", class:"btn", outlet:"sourceHelp"
       @button "Done", class: "createSnippetButton btn btn-primary"
 
   initialize: (serializeState) ->
@@ -20,6 +26,7 @@ class QuippetView extends View
     # Sets the maximum height of the snippet input field to prevent users from pulling it down too far, which would hide the other input fields
     # and the done button
     @maxSnippetHeight()
+    @sourceHelpView = new SourceHelpView()
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
@@ -42,6 +49,8 @@ class QuippetView extends View
         @createSnippet()
       field.on 'keyup', =>
         @validateFields()
+    @sourceHelp.click =>
+      @sourceHelpView.toggle()
 
   # Tear down any state and detach
   destroy: ->
