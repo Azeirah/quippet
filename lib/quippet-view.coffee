@@ -25,20 +25,23 @@ class QuippetView extends View
   serialize: ->
 
   handleEvents: ->
-    enterKeyCode = 13
-    escapeKeyCode = 27
+    # Makes sure that the snippet field can't be resized too large, so that it won't push the lower inputs and done button offscreen
     window.addEventListener 'resize', =>
       @maxSnippetHeight()
+    # Close on escape
+    enterKeyCode = 13
+    escapeKeyCode = 27
     @on 'keydown', (event) =>
       if event.which == escapeKeyCode
         @detach()
     @find('.createSnippetButton').on 'click', => @createSnippet()
+    # Add the input validation and confirm event to all fields.
     fields = [@tabName, @snippetName, @activationSource, @snippet]
     for field in fields
       field.on 'core:confirm', (event) =>
         @createSnippet()
       field.on 'keyup', =>
-        @validateSnippet()
+        @validateFields()
 
   # Tear down any state and detach
   destroy: ->
@@ -48,6 +51,8 @@ class QuippetView extends View
     @snippet.text text
 
   populateSourceField: ->
+    # If a file is opened, take its extension and populate the source input field with it.
+    # Ex: when quippet-view.coffee is opened, and you open quippet, the 'source' input field will contain '.source.coffee'
     editor = atom.workspace.getActiveEditor()
     if editor
       filename = editor.getTitle()
@@ -59,7 +64,7 @@ class QuippetView extends View
     snippetName = @snippetName.getText()
     source = @activationSource.getText()
     snippet = @snippet.val()
-    if @validateSnippet()
+    if @validateFields()
       console.log "New snippet is valid"
       filepath = __dirname + '/../snippets/' + snippetName + '.json'
       snippetJSON = {}
@@ -95,13 +100,14 @@ class QuippetView extends View
       console.log 'snippet is invalid'
 
   cleanup: ->
+    # After a snippet has been saved, empty the input fields
     @tabName.setText('')
     @snippetName.setText('')
     @activationSource.setText('')
     @snippet.val('')
     @detach()
 
-  validateSnippet: ->
+  validateFields: ->
     tabname = @tabName.getText().length
     snippetName = @snippetName.getText().length
     source = @activationSource.getText().length
