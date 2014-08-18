@@ -17,8 +17,9 @@ class QuippetView extends View
   initialize: (serializeState) ->
     @handleEvents()
     atom.workspaceView.command "quippet:toggle", => @toggle()
+    # Sets the maximum height of the snippet input field to prevent users from pulling it down too far, which would hide the other input fields
+    # and the done button
     @maxSnippetHeight()
-
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
@@ -126,7 +127,7 @@ class QuippetView extends View
       @populateSourceField()
       if selection.length > 0
         @populateSnippetField(selection)
-        @snippet.focus()
+    @snippet.focus()
 
   maxSnippetHeight: ->
     @snippet.css "max-height", (window.innerHeight * 0.8) + "px"
