@@ -8,7 +8,7 @@ class QuippetView extends View
     @div class: 'quippet overlay from-top', =>
       @div class: "panel", =>
         @h1 "Create a quick snippet here!", class: "panel-heading"
-      @textarea "snippetField", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet"
+      @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "Type the snippet body here"
       @subview "tabName", new EditorView(mini:true, placeholderText: 'Snippet tab activation')
       @subview "snippetName", new EditorView(mini:true, placeholderText: 'Snippet name')
       @subview "activationSource", new EditorView(mini:true, placeholderText: 'Snippet selector (ex: `.source.js`)')

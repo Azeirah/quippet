@@ -1,0 +1,8 @@
+{
+	".source.coffee": {
+		"doesit": {
+			"prefix": "doel",
+			"body": "Does it still works?"
+		}
+	}
+}
