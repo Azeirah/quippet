@@ -12,7 +12,7 @@ class QuippetView extends View
       @subview "tabName", new EditorView(mini:true, placeholderText: 'Snippet tab activation')
       @subview "snippetName", new EditorView(mini:true, placeholderText: 'Snippet name')
       @subview "activationSource", new EditorView(mini:true, placeholderText: 'Snippet selector (ex: `.source.js`)')
-      @button "Done", class: "createSnippetButton btn"
+      @button "Done", class: "createSnippetButton btn btn-primary"
 
   initialize: (serializeState) ->
     @handleEvents()
