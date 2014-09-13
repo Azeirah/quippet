@@ -66,7 +66,7 @@ class QuippetView extends View
     if editor
       filename = editor.getTitle()
       if filename.contains '.'
-        @activationSource.setText '.source.' + filename.split('.').pop()
+        @activationSource.setText '.' + editor.getCursorScopes()[0]
 
   createSnippet: ->
     tabname = @tabName.getText()
@@ -74,7 +74,6 @@ class QuippetView extends View
     source = @activationSource.getText()
     snippet = @snippet.val()
     if @validateFields()
-      console.log "New snippet is valid"
       filepath = __dirname + '/../snippets/' + snippetName + '.json'
       snippetJSON = {}
 

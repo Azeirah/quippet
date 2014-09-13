@@ -24,15 +24,16 @@ class sourceHelpView extends View
     @handleEvents()
     @focus()
 
+  populateScopes: () ->
+    @inspectorOutput.text('')
+    scopes = atom.workspace.getActiveEditor().getCursorScopes()
+    text = ''
+    for scope in scopes
+      text += "." + scope + "\n"
+    @inspectorOutput.text(text)
+
   handleEvents: ->
-    @inspector.click =>
-      scopes = atom.workspace.getActiveEditor().getCursorScopes()
-      console.log scopes
-      @inspectorOutput.text('')
-      text = ''
-      for scope in scopes
-        text += scope + "\n"
-      @inspectorOutput.text(text)
+    @inspector.click(@populateScopes)
     @close.click =>
       @toggle()
 
@@ -51,3 +52,4 @@ class sourceHelpView extends View
 
   showPane: ->
     atom.workspaceView.append(this)
+    populateScopes()
